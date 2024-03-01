@@ -21,9 +21,11 @@ const builtin = @import("builtin");
 const std = @import("std");
 const zimd = @import("zimd.zig");
 
-const TableLookupBytesOr0 = fn (bytes: @Vector(16, u8), indices: @Vector(16, i8)) callconv(.Inline) @Vector(16, u8);
+pub const TableLookupBytesOr0 = fn (bytes: @Vector(16, u8), indices: @Vector(16, i8)) callconv(.Inline) @Vector(16, u8);
 
-pub fn GetTableLookupBytesOr0(comptime cpu: std.Target.Cpu) TableLookupBytesOr0 {
+pub const tableLookupBytesOr0 = GetTableLookupBytesOr0(builtin.cpu);
+
+fn GetTableLookupBytesOr0(comptime cpu: std.Target.Cpu) TableLookupBytesOr0 {
     if (comptime cpu.arch.isAARCH64() and std.Target.aarch64.featureSetHas(cpu.features, .neon)) {
         return Aarch64_Neon;
     }
@@ -32,8 +34,6 @@ pub fn GetTableLookupBytesOr0(comptime cpu: std.Target.Cpu) TableLookupBytesOr0 
     }
     return Scalar;
 }
-
-pub const tableLookupBytesOr0 = GetTableLookupBytesOr0(builtin.cpu);
 
 // For all vector widths; Arm anyway zeroes if >= 0x10.
 inline fn Aarch64_Neon(bytes: @Vector(16, u8), indices: @Vector(16, i8)) @Vector(16, u8) {
