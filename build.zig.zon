@@ -1,0 +1,10 @@
+.{
+    .name = "zimd",
+    .version = "0.0.0",
+    .minimum_zig_version = "0.11.0",
+
+    // See `zig fetch --save <url>` for a command-line interface for adding dependencies.
+    .dependencies = .{},
+
+    .paths = .{""},
+}
